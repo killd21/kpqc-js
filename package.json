@@ -1,0 +1,23 @@
+{
+  "name": "kpqc-monorepo",
+  "version": "0.0.0",
+  "private": true,
+  "description": "KpqC (Korean Post-Quantum Cryptography) implementations for JavaScript/TypeScript",
+  "packageManager": "pnpm@9.15.0",
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build:wasm": "node scripts/build-wasm.mjs",
+    "build": "pnpm -r build",
+    "test": "pnpm -r test",
+    "test:kat": "node scripts/verify-kat.mjs",
+    "typecheck": "pnpm -r typecheck"
+  },
+  "devDependencies": {
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}

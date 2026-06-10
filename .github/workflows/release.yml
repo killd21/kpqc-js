@@ -1,0 +1,43 @@
+# Publishes @kpqc/aimer to npm on a version tag (e.g. aimer-v0.1.0).
+# Requires repository secret NPM_TOKEN. Publishing is intentionally gated on a
+# tag so it never runs by accident. (Deferred until the npm account is set up.)
+name: Release
+
+on:
+  push:
+    tags:
+      - "aimer-v*"
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # npm provenance
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Emscripten
+        uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: 4.0.16
+          actions-cache-folder: emsdk-cache
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+
+      - run: corepack enable
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build:wasm
+        env:
+          EMSDK: ${{ env.EMSDK }}
+      - run: pnpm test:kat
+      - run: pnpm build
+      - run: pnpm test
+
+      - name: Publish
+        run: pnpm --filter @kpqc/aimer publish --no-git-checks
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

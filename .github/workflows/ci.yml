@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Emscripten
+        uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: 4.0.16
+          actions-cache-folder: emsdk-cache
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Enable pnpm
+        run: corepack enable
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build wasm
+        run: pnpm build:wasm
+        env:
+          # The setup-emsdk action puts emcc on PATH; point the build script at it.
+          EMSDK: ${{ env.EMSDK }}
+
+      - name: KAT gate (600 official vectors)
+        run: pnpm test:kat
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Build packages
+        run: pnpm build
+
+      - name: Unit tests
+        run: pnpm test

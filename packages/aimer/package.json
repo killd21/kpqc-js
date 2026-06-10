@@ -1,0 +1,47 @@
+{
+  "name": "@kpqc/aimer",
+  "version": "0.1.0",
+  "description": "AIMer post-quantum digital signature (KpqC) for Node.js and browsers, compiled to WebAssembly",
+  "keywords": [
+    "kpqc",
+    "post-quantum",
+    "pqc",
+    "cryptography",
+    "digital-signature",
+    "aimer",
+    "wasm",
+    "webassembly"
+  ],
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "wasm/aimer.mjs",
+    "wasm/aimer.wasm",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  }
+}

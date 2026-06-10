@@ -1,0 +1,27 @@
+# deps
+node_modules/
+.pnpm-store/
+
+# build output
+dist/
+*.tsbuildinfo
+
+# emscripten / wasm intermediate
+.emsdk/
+emsdk/
+build-wasm/
+*.o
+*.bc
+
+# logs / os
+*.log
+.DS_Store
+Thumbs.db
+
+# test / coverage
+coverage/
+.vitest/
+
+# editor
+.vscode/
+.idea/
