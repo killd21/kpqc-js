@@ -1,5 +1,5 @@
 {
-  "name": "@kpqc/aimer",
+  "name": "@killd21/aimer",
   "version": "0.1.0",
   "description": "AIMer post-quantum digital signature (KpqC) for Node.js and browsers, compiled to WebAssembly",
   "keywords": [
@@ -40,8 +40,14 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/killd21/aimer-js.git",
+    "directory": "packages/aimer"
+  },
+  "homepage": "https://github.com/killd21/aimer-js#readme",
+  "bugs": "https://github.com/killd21/aimer-js/issues",
   "publishConfig": {
-    "access": "public",
-    "provenance": true
+    "access": "public"
   }
 }

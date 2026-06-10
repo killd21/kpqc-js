@@ -1,4 +1,4 @@
-// @kpqc/aimer — AIMer post-quantum digital signature (KpqC), compiled to
+// @killd21/aimer — AIMer post-quantum digital signature (KpqC), compiled to
 // WebAssembly. Works in Node.js and browsers.
 //
 // AIMer is a stateless hash-/MPC-in-the-head signature scheme submitted by

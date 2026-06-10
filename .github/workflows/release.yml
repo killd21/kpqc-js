@@ -1,4 +1,4 @@
-# Publishes @kpqc/aimer to npm on a version tag (e.g. aimer-v0.1.0).
+# Publishes @killd21/aimer to npm on a version tag (e.g. aimer-v0.1.0).
 # Requires repository secret NPM_TOKEN. Publishing is intentionally gated on a
 # tag so it never runs by accident. (Deferred until the npm account is set up.)
 name: Release
@@ -38,6 +38,6 @@ jobs:
       - run: pnpm test
 
       - name: Publish
-        run: pnpm --filter @kpqc/aimer publish --no-git-checks
+        run: pnpm --filter @killd21/aimer publish --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

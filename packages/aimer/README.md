@@ -1,10 +1,10 @@
-# @kpqc/aimer
+# @killd21/aimer
 
 > AIMer post-quantum digital signatures for JavaScript & TypeScript — Node.js and the browser.
 
-[![npm](https://img.shields.io/npm/v/@kpqc/aimer.svg)](https://www.npmjs.com/package/@kpqc/aimer)
-[![license](https://img.shields.io/npm/l/@kpqc/aimer.svg)](./LICENSE)
-[![types](https://img.shields.io/npm/types/@kpqc/aimer.svg)](https://www.npmjs.com/package/@kpqc/aimer)
+[![npm](https://img.shields.io/npm/v/@killd21/aimer.svg)](https://www.npmjs.com/package/@killd21/aimer)
+[![license](https://img.shields.io/npm/l/@killd21/aimer.svg)](./LICENSE)
+[![types](https://img.shields.io/npm/types/@killd21/aimer.svg)](https://www.npmjs.com/package/@killd21/aimer)
 
 **AIMer** is a post-quantum (quantum-resistant) digital signature scheme from the
 Korean Post-Quantum Cryptography ([KpqC](https://www.kpqc.or.kr/)) Competition.
@@ -21,17 +21,17 @@ wrapped in a small, fully-typed API.
 ## Install
 
 ```sh
-npm install @kpqc/aimer
+npm install @killd21/aimer
 ```
 
 ```sh
-pnpm add @kpqc/aimer    # or: yarn add @kpqc/aimer / bun add @kpqc/aimer
+pnpm add @killd21/aimer    # or: yarn add @killd21/aimer / bun add @killd21/aimer
 ```
 
 ## Quick start
 
 ```ts
-import { aimer128f } from "@kpqc/aimer";
+import { aimer128f } from "@killd21/aimer";
 
 const message = new TextEncoder().encode("hello post-quantum world");
 
@@ -60,7 +60,7 @@ import {
   aimer128f, aimer128s,
   aimer192f, aimer192s,
   aimer256f, aimer256s,
-} from "@kpqc/aimer";
+} from "@killd21/aimer";
 ```
 
 | Parameter set | Security | Public key | Secret key | Signature | Pick when…                       |
@@ -75,7 +75,7 @@ import {
 You can also look them up dynamically:
 
 ```ts
-import { aimer, PARAMETER_SETS } from "@kpqc/aimer";
+import { aimer, PARAMETER_SETS } from "@killd21/aimer";
 
 PARAMETER_SETS;        // ["aimer128f", "aimer128s", ..., "aimer256s"]
 const scheme = aimer["aimer192s"];
