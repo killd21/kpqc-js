@@ -1,0 +1,54 @@
+{
+  "name": "@killd21/haetae",
+  "version": "0.1.0",
+  "description": "HAETAE post-quantum digital signature (KpqC) for Node.js and browsers, compiled to WebAssembly",
+  "keywords": [
+    "kpqc",
+    "post-quantum",
+    "pqc",
+    "cryptography",
+    "digital-signature",
+    "haetae",
+    "lattice",
+    "wasm",
+    "webassembly"
+  ],
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "wasm/haetae.mjs",
+    "wasm/haetae.wasm",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/killd21/aimer-js.git",
+    "directory": "packages/haetae"
+  },
+  "homepage": "https://github.com/killd21/aimer-js/tree/main/packages/haetae#readme",
+  "bugs": "https://github.com/killd21/aimer-js/issues",
+  "publishConfig": {
+    "access": "public"
+  }
+}
