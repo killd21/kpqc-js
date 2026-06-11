@@ -1,34 +1,37 @@
 import { describe, expect, it } from "vitest";
 import {
-  haetae,
+  aimer,
   PARAMETER_SETS,
   type ParameterSet,
   type SignatureScheme,
-} from "../src/index.js";
+} from "../src/aimer.js";
 
 const SIZES: Record<ParameterSet, { pk: number; sk: number; sig: number }> = {
-  haetae2: { pk: 992, sk: 1408, sig: 1474 },
-  haetae3: { pk: 1472, sk: 2112, sig: 2349 },
-  haetae5: { pk: 2080, sk: 2752, sig: 2948 },
+  aimer128f: { pk: 32, sk: 48, sig: 5888 },
+  aimer128s: { pk: 32, sk: 48, sig: 4160 },
+  aimer192f: { pk: 48, sk: 72, sig: 13056 },
+  aimer192s: { pk: 48, sk: 72, sig: 9120 },
+  aimer256f: { pk: 64, sk: 96, sig: 25120 },
+  aimer256s: { pk: 64, sk: 96, sig: 17056 },
 };
 
 const msg = new TextEncoder().encode("the quick brown fox");
 
 describe("PARAMETER_SETS", () => {
-  it("exposes all three HAETAE parameter sets", () => {
-    expect(PARAMETER_SETS).toHaveLength(3);
+  it("exposes all six AIMer parameter sets", () => {
+    expect(PARAMETER_SETS).toHaveLength(6);
     for (const set of PARAMETER_SETS) {
-      expect(haetae[set]).toBeDefined();
+      expect(aimer[set]).toBeDefined();
     }
   });
 });
 
 describe.each(PARAMETER_SETS)("%s", (set) => {
-  const scheme: SignatureScheme = haetae[set];
+  const scheme: SignatureScheme = aimer[set];
   const sizes = SIZES[set];
 
   it("reports correct constants", () => {
-    expect(scheme.name).toBe(`haetae-${set.replace("haetae", "mode")}`);
+    expect(scheme.name).toBe(`aimer-${set.slice(5)}`);
     expect(scheme.publicKeyBytes).toBe(sizes.pk);
     expect(scheme.secretKeyBytes).toBe(sizes.sk);
     expect(scheme.signatureBytes).toBe(sizes.sig);
@@ -72,21 +75,21 @@ describe.each(PARAMETER_SETS)("%s", (set) => {
     const { publicKey, secretKey } = await scheme.keygen();
     const ctx = new TextEncoder().encode("ctx-A");
     const sig = await scheme.sign(msg, secretKey, { context: ctx });
-    expect(await scheme.verify(msg, sig, publicKey, { context: ctx })).toBe(
-      true,
-    );
+    expect(await scheme.verify(msg, sig, publicKey, { context: ctx })).toBe(true);
     expect(await scheme.verify(msg, sig, publicKey)).toBe(false);
     const other = new TextEncoder().encode("ctx-B");
-    expect(await scheme.verify(msg, sig, publicKey, { context: other })).toBe(
-      false,
-    );
+    expect(
+      await scheme.verify(msg, sig, publicKey, { context: other }),
+    ).toBe(false);
   });
 
   it("validates key lengths", async () => {
     const { publicKey, secretKey } = await scheme.keygen();
     const sig = await scheme.sign(msg, secretKey);
     await expect(scheme.sign(msg, secretKey.slice(1))).rejects.toThrow();
-    await expect(scheme.verify(msg, sig, publicKey.slice(1))).rejects.toThrow();
+    await expect(
+      scheme.verify(msg, sig, publicKey.slice(1)),
+    ).rejects.toThrow();
   });
 
   it("handles empty messages", async () => {

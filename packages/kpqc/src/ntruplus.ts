@@ -1,46 +1,36 @@
-// @killd21/ntruplus — NTRU+ post-quantum key encapsulation mechanism (KpqC),
-// compiled to WebAssembly. Works in Node.js and browsers.
+// NTRU+ post-quantum key encapsulation mechanism (KpqC), compiled to
+// WebAssembly.
 //
 // NTRU+ is a lattice-based KEM selected as a final algorithm in Round 2 of the
 // Korean Post-Quantum Cryptography (KpqC) Competition. A KEM establishes a
 // shared secret between two parties: the sender encapsulates against the
 // recipient's public key, the recipient decapsulates with their secret key.
 //
-// SECURITY NOTE: This package wraps the NTRU+ *reference* implementation. It is
+// SECURITY NOTE: This module wraps the NTRU+ *reference* implementation. It is
 // validated against the official Known Answer Tests but has NOT undergone an
 // independent security audit, and WebAssembly/JS cannot guarantee constant-time
 // execution. Evaluate carefully before production use.
 
-import { fn, loadNtruplus, readBytes, withHeap, writeBytes } from "./wasm.js";
+import {
+  assertLen,
+  fn,
+  readBytes,
+  withHeap,
+  writeBytes,
+  type EmscriptenModule,
+} from "./internal.js";
+import type { Encapsulation, KemScheme, KeyPair } from "./types.js";
 
-export interface KeyPair {
-  publicKey: Uint8Array;
-  secretKey: Uint8Array;
-}
+export type { Encapsulation, KemScheme, KeyPair };
 
-export interface Encapsulation {
-  /** Send this to the holder of the secret key. */
-  ciphertext: Uint8Array;
-  /** Keep this; the recipient derives the same bytes via decapsulate(). */
-  sharedSecret: Uint8Array;
-}
+let modulePromise: Promise<EmscriptenModule> | undefined;
 
-export interface KemScheme {
-  /** Algorithm name, e.g. "NTRU+768". */
-  readonly name: string;
-  readonly publicKeyBytes: number;
-  readonly secretKeyBytes: number;
-  readonly ciphertextBytes: number;
-  readonly sharedSecretBytes: number;
-  /** Generate a fresh keypair using the platform's secure RNG. */
-  keygen(): Promise<KeyPair>;
-  /** Encapsulate a fresh shared secret against `publicKey`. */
-  encapsulate(publicKey: Uint8Array): Promise<Encapsulation>;
-  /** Recover the shared secret from `ciphertext` using `secretKey`. */
-  decapsulate(
-    ciphertext: Uint8Array,
-    secretKey: Uint8Array,
-  ): Promise<Uint8Array>;
+/** Instantiate (once) and return the shared wasm module instance. */
+async function loadNtruplus(): Promise<EmscriptenModule> {
+  if (!modulePromise) {
+    modulePromise = import("../wasm/ntruplus.mjs").then((m) => m.default());
+  }
+  return modulePromise;
 }
 
 interface Sizes {
@@ -60,12 +50,6 @@ export type ParameterSet = keyof typeof PARAMS;
 
 export const PARAMETER_SETS = Object.keys(PARAMS) as ParameterSet[];
 
-function assertLen(name: string, got: number, want: number): void {
-  if (got !== want) {
-    throw new Error(`${name} must be ${want} bytes, got ${got}`);
-  }
-}
-
 function createScheme(set: ParameterSet): KemScheme {
   const { pk, sk, ct, ss } = PARAMS[set];
   const n = set.slice("ntruplus".length);
@@ -81,7 +65,7 @@ function createScheme(set: ParameterSet): KemScheme {
 
     async keygen(): Promise<KeyPair> {
       const mod = await loadNtruplus();
-      mod._ntruplus_use_secure_rng();
+      fn(mod, "_ntruplus_use_secure_rng")();
       const keypair = fn(mod, ns + "crypto_kem_keypair");
       return withHeap(mod, [pk, sk], (pkPtr, skPtr) => {
         const rc = keypair(pkPtr, skPtr);
@@ -96,7 +80,7 @@ function createScheme(set: ParameterSet): KemScheme {
     async encapsulate(publicKey): Promise<Encapsulation> {
       assertLen("publicKey", publicKey.length, pk);
       const mod = await loadNtruplus();
-      mod._ntruplus_use_secure_rng();
+      fn(mod, "_ntruplus_use_secure_rng")();
       const enc = fn(mod, ns + "crypto_kem_enc");
       return withHeap(mod, [ct, ss, pk], (ctPtr, ssPtr, pkPtr) => {
         writeBytes(mod, pkPtr, publicKey);

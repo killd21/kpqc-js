@@ -4,7 +4,7 @@
 import { readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import createAimerModule from "../packages/aimer/wasm/aimer.mjs";
+import createAimerModule from "../packages/kpqc/wasm/aimer.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const repo = join(__dirname, "..");

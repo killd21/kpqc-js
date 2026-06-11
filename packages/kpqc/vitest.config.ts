@@ -3,11 +3,16 @@ import { defineConfig } from "vitest/config";
 export default defineConfig({
   test: {
     environment: "node",
+    // AIMer signing (especially the 256-bit / "s" sets) is computationally heavy.
     testTimeout: 120000,
     hookTimeout: 120000,
   },
   // The Emscripten glue is a prebuilt artifact; don't let Vite transform it.
   ssr: {
-    external: ["../wasm/ntruplus.mjs"],
+    external: [
+      "../wasm/aimer.mjs",
+      "../wasm/haetae.mjs",
+      "../wasm/ntruplus.mjs",
+    ],
   },
 });

@@ -1,0 +1,72 @@
+{
+  "name": "@killd21/kpqc",
+  "version": "0.1.0",
+  "description": "KpqC (Korean Post-Quantum Cryptography) for Node.js and browsers — AIMer & HAETAE signatures and the NTRU+ KEM, compiled to WebAssembly",
+  "keywords": [
+    "kpqc",
+    "post-quantum",
+    "pqc",
+    "cryptography",
+    "digital-signature",
+    "kem",
+    "key-encapsulation",
+    "aimer",
+    "haetae",
+    "ntruplus",
+    "lattice",
+    "wasm",
+    "webassembly"
+  ],
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./aimer": {
+      "types": "./dist/aimer.d.ts",
+      "import": "./dist/aimer.js",
+      "require": "./dist/aimer.cjs"
+    },
+    "./haetae": {
+      "types": "./dist/haetae.d.ts",
+      "import": "./dist/haetae.js",
+      "require": "./dist/haetae.cjs"
+    },
+    "./ntruplus": {
+      "types": "./dist/ntruplus.d.ts",
+      "import": "./dist/ntruplus.js",
+      "require": "./dist/ntruplus.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "wasm",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/killd21/kpqc-js.git",
+    "directory": "packages/kpqc"
+  },
+  "homepage": "https://github.com/killd21/kpqc-js#readme",
+  "bugs": "https://github.com/killd21/kpqc-js/issues",
+  "publishConfig": {
+    "access": "public"
+  }
+}

@@ -1,49 +1,34 @@
-// @killd21/haetae — HAETAE post-quantum digital signature (KpqC), compiled to
-// WebAssembly. Works in Node.js and browsers.
+// HAETAE post-quantum digital signature (KpqC), compiled to WebAssembly.
 //
 // HAETAE is a lattice-based (Module-LWE / Module-SIS) signature scheme using the
 // "Fiat-Shamir with aborts" paradigm and bimodal/hyperball Gaussian sampling. It
 // was submitted to the Korean Post-Quantum Cryptography (KpqC) Competition.
 //
-// SECURITY NOTE: This package wraps the HAETAE *reference* implementation. It is
+// SECURITY NOTE: This module wraps the HAETAE *reference* implementation. It is
 // validated against the official Known Answer Tests but has NOT undergone an
 // independent security audit, and WebAssembly/JS cannot guarantee constant-time
 // execution. Evaluate carefully before production use.
 
-import { fn, loadHaetae, readBytes, withHeap, writeBytes } from "./wasm.js";
+import {
+  assertLen,
+  fn,
+  readBytes,
+  withHeap,
+  writeBytes,
+  type EmscriptenModule,
+} from "./internal.js";
+import type { KeyPair, SignatureScheme, SignOptions } from "./types.js";
 
-export interface KeyPair {
-  publicKey: Uint8Array;
-  secretKey: Uint8Array;
-}
+export type { KeyPair, SignatureScheme, SignOptions };
 
-export interface SignOptions {
-  /** Optional context string bound into the signature (max 255 bytes). */
-  context?: Uint8Array;
-}
+let modulePromise: Promise<EmscriptenModule> | undefined;
 
-export interface SignatureScheme {
-  /** Algorithm name, e.g. "haetae-mode2". */
-  readonly name: string;
-  readonly publicKeyBytes: number;
-  readonly secretKeyBytes: number;
-  /** Maximum (and, for this reference build, exact) signature size in bytes. */
-  readonly signatureBytes: number;
-  /** Generate a fresh keypair using the platform's secure RNG. */
-  keygen(): Promise<KeyPair>;
-  /** Produce a detached signature over `message`. */
-  sign(
-    message: Uint8Array,
-    secretKey: Uint8Array,
-    options?: SignOptions,
-  ): Promise<Uint8Array>;
-  /** Verify a detached signature. Returns true iff valid. */
-  verify(
-    message: Uint8Array,
-    signature: Uint8Array,
-    publicKey: Uint8Array,
-    options?: SignOptions,
-  ): Promise<boolean>;
+/** Instantiate (once) and return the shared wasm module instance. */
+async function loadHaetae(): Promise<EmscriptenModule> {
+  if (!modulePromise) {
+    modulePromise = import("../wasm/haetae.mjs").then((m) => m.default());
+  }
+  return modulePromise;
 }
 
 interface Sizes {
@@ -62,12 +47,6 @@ export type ParameterSet = keyof typeof PARAMS;
 
 export const PARAMETER_SETS = Object.keys(PARAMS) as ParameterSet[];
 
-function assertLen(name: string, got: number, want: number): void {
-  if (got !== want) {
-    throw new Error(`${name} must be ${want} bytes, got ${got}`);
-  }
-}
-
 function createScheme(set: ParameterSet): SignatureScheme {
   const { pk, sk, sig } = PARAMS[set];
   const mode = set.replace(/^haetae/, "mode");
@@ -82,7 +61,7 @@ function createScheme(set: ParameterSet): SignatureScheme {
 
     async keygen(): Promise<KeyPair> {
       const mod = await loadHaetae();
-      mod._haetae_use_secure_rng();
+      fn(mod, "_haetae_use_secure_rng")();
       const keypair = fn(mod, ns + "keypair");
       return withHeap(mod, [pk, sk], (pkPtr, skPtr) => {
         const rc = keypair(pkPtr, skPtr);
@@ -99,7 +78,7 @@ function createScheme(set: ParameterSet): SignatureScheme {
       const ctx = options?.context ?? new Uint8Array(0);
       if (ctx.length > 255) throw new Error("context must be <= 255 bytes");
       const mod = await loadHaetae();
-      mod._haetae_use_secure_rng();
+      fn(mod, "_haetae_use_secure_rng")();
       const signature = fn(mod, ns + "signature");
       return withHeap(
         mod,

@@ -36,8 +36,8 @@ const aimerCommon = join(
   "Reference_Implementation",
   "common",
 );
-const pkgDir = join(repoRoot, "packages", "haetae");
-const csrcDir = join(pkgDir, "csrc");
+const pkgDir = join(repoRoot, "packages", "kpqc");
+const csrcDir = join(pkgDir, "csrc", "haetae");
 const buildDir = join(repoRoot, "build-wasm-haetae");
 const outDir = join(pkgDir, "wasm");
 
@@ -194,7 +194,7 @@ function main() {
     outJs,
   ]);
 
-  console.log("\nDone. Output in packages/haetae/wasm/");
+  console.log("\nDone. Output in packages/kpqc/wasm/");
 }
 
 main();

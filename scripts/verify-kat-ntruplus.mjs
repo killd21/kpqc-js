@@ -11,7 +11,7 @@
 import { readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import createNtruplusModule from "../packages/ntruplus/wasm/ntruplus.mjs";
+import createNtruplusModule from "../packages/kpqc/wasm/ntruplus.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const repo = join(__dirname, "..");

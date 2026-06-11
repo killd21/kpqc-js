@@ -27,8 +27,8 @@ const EMCC_PY = join(EMSDK, "upstream", "emscripten", "emcc.py");
 const PYTHON = process.env.PYTHON || "python";
 
 const refDir = join(repoRoot, "vendor", "NTRUplus", "Reference_Implementation");
-const pkgDir = join(repoRoot, "packages", "ntruplus");
-const csrcDir = join(pkgDir, "csrc");
+const pkgDir = join(repoRoot, "packages", "kpqc");
+const csrcDir = join(pkgDir, "csrc", "ntruplus");
 const buildDir = join(repoRoot, "build-wasm-ntruplus");
 const outDir = join(pkgDir, "wasm");
 
@@ -181,7 +181,7 @@ function main() {
     outJs,
   ]);
 
-  console.log("\nDone. Output in packages/ntruplus/wasm/");
+  console.log("\nDone. Output in packages/kpqc/wasm/");
 }
 
 main();

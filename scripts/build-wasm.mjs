@@ -26,8 +26,8 @@ const PYTHON = process.env.PYTHON || "python";
 
 const refDir = join(repoRoot, "vendor", "AIMer", "Reference_Implementation");
 const commonDir = join(refDir, "common");
-const pkgDir = join(repoRoot, "packages", "aimer");
-const csrcDir = join(pkgDir, "csrc");
+const pkgDir = join(repoRoot, "packages", "kpqc");
+const csrcDir = join(pkgDir, "csrc", "aimer");
 const buildDir = join(repoRoot, "build-wasm");
 const outDir = join(pkgDir, "wasm");
 
@@ -155,7 +155,7 @@ function main() {
     outJs,
   ]);
 
-  console.log("\nDone. Output in packages/aimer/wasm/");
+  console.log("\nDone. Output in packages/kpqc/wasm/");
 }
 
 main();

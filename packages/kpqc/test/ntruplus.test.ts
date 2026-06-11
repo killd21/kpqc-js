@@ -4,7 +4,7 @@ import {
   PARAMETER_SETS,
   type KemScheme,
   type ParameterSet,
-} from "../src/index.js";
+} from "../src/ntruplus.js";
 
 const SIZES: Record<
   ParameterSet,
