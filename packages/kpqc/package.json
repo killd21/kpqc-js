@@ -1,6 +1,6 @@
 {
   "name": "@killd21/kpqc",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "KpqC (Korean Post-Quantum Cryptography) for Node.js and browsers — AIMer & HAETAE signatures and the NTRU+ & SMAUG-T KEMs, compiled to WebAssembly",
   "keywords": [
     "kpqc",
