@@ -2,11 +2,18 @@ MIT License
 
 Copyright (c) 2026 KpqC-js contributors
 
-This package distributes and builds upon the AIMer reference implementation,
-which is licensed under the MIT License and developed by Samsung SDS, submitted
-to the Korean Post-Quantum Cryptography (KpqC) Competition and the NIST
-Additional Digital Signature Schemes process. The original AIMer license and
-attribution are retained in `vendor/AIMer`.
+This package distributes and builds upon the following reference
+implementations, each licensed under the MIT License and submitted to the
+Korean Post-Quantum Cryptography (KpqC) Competition:
+
+  - AIMer, developed by Samsung SDS (also submitted to the NIST Additional
+    Digital Signature Schemes process);
+  - HAETAE, developed by the HAETAE team (CryptoLab Inc. and collaborators);
+  - NTRU+, developed by the NTRU+ TEAM (https://www.ntruplus.org/).
+
+The original licenses and attributions are retained in `vendor/AIMer`,
+`vendor/HAETAE` and `vendor/NTRUplus` of the source repository
+(https://github.com/killd21/kpqc-js).
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
