@@ -9,14 +9,16 @@
     "node": ">=18"
   },
   "scripts": {
-    "build:wasm": "node scripts/build-wasm.mjs && node scripts/build-wasm-haetae.mjs",
+    "build:wasm": "node scripts/build-wasm.mjs && node scripts/build-wasm-haetae.mjs && node scripts/build-wasm-ntruplus.mjs",
     "build:wasm:aimer": "node scripts/build-wasm.mjs",
     "build:wasm:haetae": "node scripts/build-wasm-haetae.mjs",
+    "build:wasm:ntruplus": "node scripts/build-wasm-ntruplus.mjs",
     "build": "pnpm -r build",
     "test": "pnpm -r test",
-    "test:kat": "node scripts/verify-kat.mjs && node scripts/verify-kat-haetae.mjs",
+    "test:kat": "node scripts/verify-kat.mjs && node scripts/verify-kat-haetae.mjs && node scripts/verify-kat-ntruplus.mjs",
     "test:kat:aimer": "node scripts/verify-kat.mjs",
     "test:kat:haetae": "node scripts/verify-kat-haetae.mjs",
+    "test:kat:ntruplus": "node scripts/verify-kat-ntruplus.mjs",
     "typecheck": "pnpm -r typecheck"
   },
   "devDependencies": {

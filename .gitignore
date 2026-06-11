@@ -11,6 +11,7 @@ dist/
 emsdk/
 build-wasm/
 build-wasm-haetae/
+build-wasm-ntruplus/
 *.o
 *.bc
 
