@@ -12,6 +12,7 @@ emsdk/
 build-wasm/
 build-wasm-haetae/
 build-wasm-ntruplus/
+build-wasm-smaugt/
 *.o
 *.bc
 

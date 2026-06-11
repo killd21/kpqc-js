@@ -20,3 +20,10 @@ declare module "*/ntruplus.mjs" {
   ) => Promise<import("./internal.js").EmscriptenModule>;
   export default createNtruplusModule;
 }
+
+declare module "*/smaugt.mjs" {
+  const createSmaugtModule: (
+    moduleArg?: Record<string, unknown>,
+  ) => Promise<import("./internal.js").EmscriptenModule>;
+  export default createSmaugtModule;
+}

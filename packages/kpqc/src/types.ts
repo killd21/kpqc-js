@@ -42,7 +42,7 @@ export interface Encapsulation {
   sharedSecret: Uint8Array;
 }
 
-/** A key encapsulation mechanism (NTRU+). */
+/** A key encapsulation mechanism (NTRU+, SMAUG-T). */
 export interface KemScheme {
   /** Algorithm name, e.g. "NTRU+768". */
   readonly name: string;

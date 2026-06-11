@@ -9,6 +9,7 @@ export default defineConfig({
     aimer: "src/aimer.ts",
     haetae: "src/haetae.ts",
     ntruplus: "src/ntruplus.ts",
+    smaugt: "src/smaugt.ts",
   },
   format: ["esm", "cjs"],
   dts: true,
@@ -22,7 +23,7 @@ export default defineConfig({
       // the .wasm files live beside it. Bundling it would break wasm resolution.
       name: "external-wasm-glue",
       setup(build) {
-        build.onResolve({ filter: /\/(aimer|haetae|ntruplus)\.mjs$/ }, (args) => ({
+        build.onResolve({ filter: /\/(aimer|haetae|ntruplus|smaugt)\.mjs$/ }, (args) => ({
           path: args.path,
           external: true,
         }));

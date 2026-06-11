@@ -1,6 +1,6 @@
 // @killd21/kpqc — KpqC (Korean Post-Quantum Cryptography) for JavaScript &
-// TypeScript: the AIMer and HAETAE signature schemes and the NTRU+ KEM,
-// compiled to WebAssembly. Works in Node.js and browsers.
+// TypeScript: the AIMer and HAETAE signature schemes and the NTRU+ and SMAUG-T
+// KEMs, compiled to WebAssembly. Works in Node.js and browsers.
 //
 // Root entry: everything re-exported under one roof. Per-algorithm subpath
 // entries are also available and are drop-in replacements for the former
@@ -9,6 +9,7 @@
 //   import { aimer128f }    from "@killd21/kpqc/aimer";
 //   import { haetae2 }      from "@killd21/kpqc/haetae";
 //   import { ntruplus768 }  from "@killd21/kpqc/ntruplus";
+//   import { smaugt128 }    from "@killd21/kpqc/smaugt";
 //
 // Each wasm module is loaded lazily on first use, so importing the root entry
 // does not pull in algorithms you never call.
@@ -50,3 +51,13 @@ export {
   PARAMETER_SETS as NTRUPLUS_PARAMETER_SETS,
   type ParameterSet as NtruplusParameterSet,
 } from "./ntruplus.js";
+
+export {
+  smaugt,
+  smaugt128,
+  smaugt192,
+  smaugt256,
+  timer,
+  PARAMETER_SETS as SMAUGT_PARAMETER_SETS,
+  type ParameterSet as SmaugtParameterSet,
+} from "./smaugt.js";

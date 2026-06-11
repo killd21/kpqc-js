@@ -9,10 +9,12 @@ Korean Post-Quantum Cryptography (KpqC) Competition:
   - AIMer, developed by Samsung SDS (also submitted to the NIST Additional
     Digital Signature Schemes process);
   - HAETAE, developed by the HAETAE team (CryptoLab Inc. and collaborators);
-  - NTRU+, developed by the NTRU+ TEAM (https://www.ntruplus.org/).
+  - NTRU+, developed by the NTRU+ TEAM (https://www.ntruplus.org/);
+  - SMAUG-T, developed by Team SMAUG-T
+    (https://www.kpqc.cryptolab.co.kr/smaug-t).
 
 The original licenses and attributions are retained in `vendor/AIMer`,
-`vendor/HAETAE` and `vendor/NTRUplus`.
+`vendor/HAETAE`, `vendor/NTRUplus` and `vendor/SMAUG-T`.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

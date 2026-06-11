@@ -6,21 +6,22 @@
 [![license](https://img.shields.io/npm/l/@killd21/kpqc.svg)](./LICENSE)
 [![types](https://img.shields.io/npm/types/@killd21/kpqc.svg)](https://www.npmjs.com/package/@killd21/kpqc)
 
-One package, three [KpqC](https://www.kpqc.or.kr/) algorithms — the official
+One package, four [KpqC](https://www.kpqc.or.kr/) algorithms — the official
 reference implementations compiled to WebAssembly, wrapped in small, fully-typed
 APIs:
 
-| Algorithm  | Kind              | Basis                       | Import                   |
-| ---------- | ----------------- | --------------------------- | ------------------------ |
-| **AIMer**  | Digital signature | Symmetric / MPC-in-the-head | `@killd21/kpqc/aimer`    |
-| **HAETAE** | Digital signature | Lattice (Module-LWE/SIS)    | `@killd21/kpqc/haetae`   |
-| **NTRU+**  | Key encapsulation | Lattice (NTRU)              | `@killd21/kpqc/ntruplus` |
+| Algorithm   | Kind              | Basis                       | Import                   |
+| ----------- | ----------------- | --------------------------- | ------------------------ |
+| **AIMer**   | Digital signature | Symmetric / MPC-in-the-head | `@killd21/kpqc/aimer`    |
+| **HAETAE**  | Digital signature | Lattice (Module-LWE/SIS)    | `@killd21/kpqc/haetae`   |
+| **NTRU+**   | Key encapsulation | Lattice (NTRU)              | `@killd21/kpqc/ntruplus` |
+| **SMAUG-T** | Key encapsulation | Lattice (Module-LWE/LWR)    | `@killd21/kpqc/smaugt`   |
 
 - 🔐 **Post-quantum secure** — primitives that resist attacks by quantum computers
 - 🌐 **Runs everywhere** — Node.js, Deno, Bun, and browsers from portable `.wasm`
 - 📦 **Zero dependencies** — no native build step, nothing to compile on install
 - 💤 **Lazy loading** — each algorithm's wasm loads on first use; import what you need
-- 🔎 **Verified** — matches all 900 official Known Answer Test vectors, byte-for-byte
+- 🔎 **Verified** — matches all 1600 official Known Answer Test vectors, byte-for-byte
 - 🟦 **First-class TypeScript** — ESM + CommonJS, types included
 
 ## Install
@@ -42,7 +43,7 @@ await haetae2.verify(msg, signature, publicKey); // true
 ```
 
 ```ts
-// Key encapsulation (NTRU+)
+// Key encapsulation (NTRU+ shown; SMAUG-T is identical in shape)
 import { ntruplus768 } from "@killd21/kpqc/ntruplus";
 
 const { publicKey, secretKey } = await ntruplus768.keygen();
@@ -68,12 +69,13 @@ protect high-value secrets in production.
 
 ```
 packages/kpqc/      # @killd21/kpqc — TypeScript wrappers + built wasm
-  src/              #   aimer.ts / haetae.ts / ntruplus.ts (+ shared internals)
+  src/              #   aimer.ts / haetae.ts / ntruplus.ts / smaugt.ts (+ shared internals)
   csrc/             #   per-algorithm RNG shims (secure RNG + KAT DRBG)
-  wasm/             #   aimer|haetae|ntruplus .wasm + Emscripten glue
+  wasm/             #   aimer|haetae|ntruplus|smaugt .wasm + Emscripten glue
 vendor/AIMer/       # upstream AIMer reference (MIT), unmodified
 vendor/HAETAE/      # upstream HAETAE reference (MIT), unmodified
 vendor/NTRUplus/    # upstream NTRU+ reference (MIT), symlinks dereferenced
+vendor/SMAUG-T/     # upstream SMAUG-T reference (MIT), unmodified
 scripts/            # build-wasm*.mjs (Emscripten) + verify-kat*.mjs (KAT gates)
 ```
 
@@ -91,14 +93,14 @@ python emsdk/emsdk.py install latest
 python emsdk/emsdk.py activate latest
 
 pnpm install
-pnpm build:wasm     # compile all three references -> packages/kpqc/wasm/
-pnpm test:kat       # KAT gate: 900 official vectors, byte-for-byte
+pnpm build:wasm     # compile all four references -> packages/kpqc/wasm/
+pnpm test:kat       # KAT gate: 1600 official vectors, byte-for-byte
 pnpm build          # build the TS package (ESM + CJS + types)
 pnpm test           # unit tests
 ```
 
-Per-algorithm variants exist too: `build:wasm:aimer|haetae|ntruplus` and
-`test:kat:aimer|haetae|ntruplus`.
+Per-algorithm variants exist too: `build:wasm:aimer|haetae|ntruplus|smaugt` and
+`test:kat:aimer|haetae|ntruplus|smaugt`.
 
 `pnpm test:kat` is the correctness contract: it regenerates every official
 Known Answer Test vector through the wasm builds and compares the bytes.
@@ -106,5 +108,6 @@ Known Answer Test vector through the wasm builds and compares the bytes.
 ## License
 
 [MIT](./LICENSE). Distributes and builds upon the AIMer (© Samsung SDS),
-HAETAE (CryptoLab Inc. and collaborators) and NTRU+ (© NTRU+ TEAM) reference
-implementations — see the `NOTICE.md` in each `vendor/` subdirectory.
+HAETAE (CryptoLab Inc. and collaborators), NTRU+ (© NTRU+ TEAM) and SMAUG-T
+(© Team SMAUG-T) reference implementations — see the `NOTICE.md` in each
+`vendor/` subdirectory.

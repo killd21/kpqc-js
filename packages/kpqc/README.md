@@ -6,21 +6,22 @@
 [![license](https://img.shields.io/npm/l/@killd21/kpqc.svg)](./LICENSE)
 [![types](https://img.shields.io/npm/types/@killd21/kpqc.svg)](https://www.npmjs.com/package/@killd21/kpqc)
 
-One package, three [KpqC](https://www.kpqc.or.kr/) algorithms — the official
+One package, four [KpqC](https://www.kpqc.or.kr/) algorithms — the official
 reference implementations compiled to WebAssembly, wrapped in small, fully-typed
 APIs:
 
-| Algorithm  | Kind                | Basis                        | Import                    |
-| ---------- | ------------------- | ---------------------------- | ------------------------- |
-| **AIMer**  | Digital signature   | Symmetric / MPC-in-the-head  | `@killd21/kpqc/aimer`     |
-| **HAETAE** | Digital signature   | Lattice (Module-LWE/SIS)     | `@killd21/kpqc/haetae`    |
-| **NTRU+**  | Key encapsulation   | Lattice (NTRU)               | `@killd21/kpqc/ntruplus`  |
+| Algorithm   | Kind                | Basis                        | Import                    |
+| ----------- | ------------------- | ---------------------------- | ------------------------- |
+| **AIMer**   | Digital signature   | Symmetric / MPC-in-the-head  | `@killd21/kpqc/aimer`     |
+| **HAETAE**  | Digital signature   | Lattice (Module-LWE/SIS)     | `@killd21/kpqc/haetae`    |
+| **NTRU+**   | Key encapsulation   | Lattice (NTRU)               | `@killd21/kpqc/ntruplus`  |
+| **SMAUG-T** | Key encapsulation   | Lattice (Module-LWE/LWR)     | `@killd21/kpqc/smaugt`    |
 
 - 🔐 **Post-quantum secure** — primitives that resist attacks by quantum computers
 - 🌐 **Runs everywhere** — Node.js, Deno, Bun, and browsers from portable `.wasm`
 - 📦 **Zero dependencies** — no native build step, nothing to compile on install
 - 💤 **Lazy loading** — each algorithm's wasm loads on first use; import what you need
-- 🔎 **Verified** — matches all 900 official Known Answer Test vectors, byte-for-byte
+- 🔎 **Verified** — matches all 1600 official Known Answer Test vectors, byte-for-byte
 - 🟦 **First-class TypeScript** — ESM + CommonJS, types included
 
 ## Install
@@ -49,10 +50,11 @@ const isValid = await haetae2.verify(message, signature, publicKey);
 console.log(isValid); // true
 ```
 
-### Key encapsulation (NTRU+)
+### Key encapsulation (NTRU+, SMAUG-T)
 
 ```ts
 import { ntruplus768 } from "@killd21/kpqc/ntruplus";
+// SMAUG-T works identically: import { smaugt128 } from "@killd21/kpqc/smaugt";
 
 // Recipient: generate a keypair, publish the public key.
 const { publicKey, secretKey } = await ntruplus768.keygen();
@@ -74,8 +76,9 @@ algorithm-prefixed names there to avoid clashes):
 
 ```ts
 import {
-  aimer128f, haetae2, ntruplus768,
-  AIMER_PARAMETER_SETS, HAETAE_PARAMETER_SETS, NTRUPLUS_PARAMETER_SETS,
+  aimer128f, haetae2, ntruplus768, smaugt128,
+  AIMER_PARAMETER_SETS, HAETAE_PARAMETER_SETS,
+  NTRUPLUS_PARAMETER_SETS, SMAUGT_PARAMETER_SETS,
 } from "@killd21/kpqc";
 ```
 
@@ -110,8 +113,20 @@ import {
 | `ntruplus864`  | Cat. 3   |     1296 B |     2624 B |     1296 B |          32 B |
 | `ntruplus1152` | Cat. 5   |     1728 B |     3488 B |     1728 B |          32 B |
 
+### SMAUG-T — `@killd21/kpqc/smaugt`
+
+`timer` (TiMER) is SMAUG-T's IoT-oriented security-level-1 variant with the
+smallest ciphertext.
+
+| Set         | Security | Public key | Secret key | Ciphertext | Shared secret |
+| ----------- | -------- | ---------: | ---------: | ---------: | ------------: |
+| `smaugt128` | Cat. 1   |      672 B |      832 B |      672 B |          32 B |
+| `smaugt192` | Cat. 3   |     1088 B |     1312 B |      992 B |          32 B |
+| `smaugt256` | Cat. 5   |     1440 B |     1728 B |     1376 B |          32 B |
+| `timer`     | Cat. 1   |      672 B |      832 B |      608 B |          32 B |
+
 Each subpath also exports `PARAMETER_SETS` and a lookup map
-(`aimer` / `haetae` / `ntruplus`) for dynamic selection:
+(`aimer` / `haetae` / `ntruplus` / `smaugt`) for dynamic selection:
 
 ```ts
 import { haetae, PARAMETER_SETS } from "@killd21/kpqc/haetae";
@@ -137,8 +152,8 @@ await haetae2.verify(message, sig, publicKey);                   // false (no co
 
 ## API
 
-Signature schemes (AIMer, HAETAE) implement `SignatureScheme`; NTRU+ implements
-`KemScheme`:
+Signature schemes (AIMer, HAETAE) implement `SignatureScheme`; the KEMs
+(NTRU+, SMAUG-T) implement `KemScheme`:
 
 ```ts
 interface SignatureScheme {
@@ -165,9 +180,13 @@ interface KemScheme {
   encapsulate(publicKey: Uint8Array):
     Promise<{ ciphertext: Uint8Array; sharedSecret: Uint8Array }>;
   decapsulate(ciphertext: Uint8Array, secretKey: Uint8Array):
-    Promise<Uint8Array>; // throws on an invalid ciphertext
+    Promise<Uint8Array>;
 }
 ```
+
+On an invalid ciphertext, NTRU+ `decapsulate` **throws**; SMAUG-T uses
+*implicit rejection* and instead returns a pseudo-random secret that will not
+match the sender's — the mismatch is only detected when the secrets are used.
 
 ## Runtime support
 
@@ -209,6 +228,6 @@ production.
 ## License
 
 [MIT](./LICENSE). Distributes and builds upon the AIMer (© Samsung SDS),
-HAETAE (CryptoLab Inc. and collaborators) and NTRU+ (© NTRU+ TEAM) reference
-implementations, retained under `vendor/` in the
+HAETAE (CryptoLab Inc. and collaborators), NTRU+ (© NTRU+ TEAM) and SMAUG-T
+(© Team SMAUG-T) reference implementations, retained under `vendor/` in the
 [source repository](https://github.com/killd21/kpqc-js).
